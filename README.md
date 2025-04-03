@@ -12,6 +12,10 @@ The project contains the following main files:
 ## Setup and usage
 
 To use this program you need to have **Python 3.x** installed, which you can find here: [python.org](https://www.python.org/downloads/).
+Additionally, you may need to install **Python 3.x-tk** as well, which you can do with the following command:
+```bash
+  pip install python3-tk
+```
 After cloning the repository or download it as a zip, run the following command:
 ```bash
   pip install -r requirements.txt
